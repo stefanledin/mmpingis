@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Events;
+
+use App\Events\Event;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+
+class PlayerScoredPoint extends Event implements ShouldBroadcast
+{
+    use SerializesModels;
+
+    public $player;
+    public $addPoint;
+
+    /**
+     * Create a new event instance.
+     *
+     * @return void
+     */
+    public function __construct($player, $addPoint)
+    {
+        $this->player = $player;
+        $this->addPoint = $addPoint;
+    }
+
+    /**
+     * Get the channels the event should be broadcast on.
+     *
+     * @return array
+     */
+    public function broadcastOn()
+    {
+        return ['mmpingis'];
+    }
+
+}
