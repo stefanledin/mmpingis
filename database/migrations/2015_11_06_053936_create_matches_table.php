@@ -14,8 +14,11 @@ class CreateMatchesTable extends Migration
     {
         Schema::create('matches', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('player1');
-            $table->string('player2');
+            $table->integer('player1')->unsigned()->nullable();
+            $table->integer('player2')->unsigned()->nullable();
+            $table->foreign('player1')->references('id')->on('players')->onDelete('cascade');
+            $table->foreign('player2')->references('id')->on('players')->onDelete('cascade');
+            $table->integer('set');
             $table->timestamps();
         });
     }

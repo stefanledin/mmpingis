@@ -13,6 +13,12 @@ class TestPlayer extends TestCase
     public function test_player1_scores_first_point()
     {
         $match = Mockery::mock('App\Match');
+        $match->shouldReceive('getScore')->once()->andReturn(
+            (object) [
+                'player1' => 1,
+                'player2' => 0
+            ]
+        );
         $player = Player::create();
 
         $event = (object) array(
@@ -22,7 +28,6 @@ class TestPlayer extends TestCase
         $player->scored($event->score)->in($match);
         
         $playerScore = $player->points()->in($match);
-
         $this->assertEquals(1, $playerScore);
     }
 
