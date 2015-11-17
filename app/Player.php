@@ -7,26 +7,25 @@ use App\Match;
 
 class Player extends Model
 {
-	public $points;
-	protected $chainedMethod;
-
-    public function scored($addPoint)
+    protected $fillable = ['match_id', 'points_set1', 'points_set2', 'points_set3'];
+ 
+    public function scored()
     {
-        $this->chainedMethod = 'scored';
-    	return $this;
+        $match = $this->match()->first();
+        $pointsInSet = $this['points_set'.$match->set];
+        $this['points_set'.$match->set] = $pointsInSet+1;
+        $this->save();
     }
 
     public function points()
     {
-        $this->chainedMethod = 'points';
-    	return $this;
+        $match = $this->match()->first();
+        return $this['points_set'.$match->set];
     }
 
-    public function in(Match $match)
+    public function match()
     {
-        if ($this->chainedMethod == 'points') {
-            $score = $match->getScore();
-            return $score->player1;
-        }
+        return $this->belongsTo('App\Match');
     }
+
 }
