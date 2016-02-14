@@ -6,21 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Match extends Model
 {
-    public function addPointFor()
-    {
-    	
-    }
+    protected $fillable = ['set'];
 
     public function getScore()
     {
-    	return (object) array(
-    		'player1' => 0,
-    		'player2' => 0
-		);
+
     }
 
-    public function set()
+    public function players()
     {
-    	return 1;
+        return $this->hasMany('App\Player');
     }
 }

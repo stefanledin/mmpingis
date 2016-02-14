@@ -14,8 +14,7 @@ class CreateMatchesTable extends Migration
     {
         Schema::create('matches', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('player1');
-            $table->string('player2');
+            $table->integer('set')->default(1);
             $table->timestamps();
         });
     }
