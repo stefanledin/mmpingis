@@ -12,6 +12,7 @@
 */
 
 Route::get('/', function () {
-	
-    return view('welcome');
+    $match = App\Match::find(6);
+    dd($match->players);    
+    #return view('welcome');
 });

@@ -12,11 +12,24 @@ class CreateMatchesTable extends Migration
      */
     public function up()
     {
-        Schema::create('matches', function (Blueprint $table) {
+        Schema::create('players', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('set')->default(1);
+            $table->string('nickname');
             $table->timestamps();
         });
+
+        Schema::create('matches', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
+        });
+        Schema::table('players', function (Blueprint $table) {
+            $table->integer('match_id')->unsigned()->nullable();
+            $table->foreign('match_id')->references('id')->on('matches');
+        });
+        /*Schema::table('matches', function(Blueprint $table) {
+            $table->integer('player_id')->unsigned()->nullable();
+            $table->foreign('player_id')->references('id')->on('players');
+        });*/
     }
 
     /**
@@ -26,6 +39,9 @@ class CreateMatchesTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('matches');
+        Schema::drop('players');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }
