@@ -15,16 +15,37 @@ class Match extends Model
     public function getScore()
     {
         $score = [];
-        foreach ($this->players as $player) {
+        foreach ($this->players()->get() as $player) {
             $score[$player->nickname] =  $player->points;
         }
         return (object) $score;
     }
 
+    /**
+     * Returns the Player that currently has most
+     * points in the game.
+     * @return Player player
+     */
+    public function getLeader()
+    {
+        $players = $this->players->sortByDesc('points');
+        return $players->first(); 
+    }
+
+    public function getOppenent(Player $player)
+    {
+        $opponent = $this->players()->where('id', '!=', $player->id);
+        return $opponent->first();
+    }
+
     public function addPointFor(Player $player)
     {
-        if ($player->points < 10) {
-            $player->points += 1;
+        $player->points += 1;
+
+        if ($player->points > 10) {
+            $player->sets_won += 1;
+            // Om motståndaren har mindre än 10 poäng så vann spelaren setet.
+            // Om motståndaren har 10 eller mer poäng
         }
         $player->save();
     }

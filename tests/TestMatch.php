@@ -31,6 +31,17 @@ class TestMatch extends TestCase
         $this->assertCount(2, $match->players);
     }
 
+    public function test_player2_is_the_oppenent_of_player1()
+    {
+        $player1 = new Player(['nickname' => 'Stefan']);
+        $player2 = new Player(['nickname' => 'Fredrik']);
+        
+        $match = Match::create();
+        $match->players()->saveMany([$player1, $player2]);      
+
+        $this->assertEquals($player2->nickname, $match->getOppenent($player1)->nickname);
+    }
+
     public function test_player1_scores_point()
     {
         $player1 = new Player(['nickname' => 'Stefan']);
@@ -49,23 +60,23 @@ class TestMatch extends TestCase
         );
 
         $this->assertEquals($expected, $score);
+        $this->assertEquals('Stefan', $match->getLeader()->nickname);
     }
 
     public function test_player_wins_set()
     {
-        $match = Match::create();
-        $match->players()->saveMany([
-            new Player([
-                'nickname' => 'Stefan',
-                'points' => 10
-            ]),
-            new Player([
-                'nickname' => 'Fredrik',
-                'points' => 9
-            ]),
+        $player1 = new Player([
+            'nickname' => 'Stefan',
+            'points' => 10
         ]);
-        $player = Player::where('nickname', 'Stefan')->first();
-        $match->addPointFor($player);
+        $player2 = new Player([
+            'nickname' => 'Fredrik',
+            'points' => 9
+        ]);
+        
+        $match = Match::create();
+        $match->players()->saveMany([$player1, $player2]);
+        $match->addPointFor($player1);
 
         $expected = (object) array(
             'Stefan' => 11,
@@ -73,6 +84,9 @@ class TestMatch extends TestCase
         );
 
         $this->assertEquals($expected, $match->getScore());
+        $this->assertEquals('Stefan', $match->getLeader()->nickname);
+        $this->assertEquals(1, $player1->sets_won);
+        $this->assertEquals(0, $player2->sets_won);
     }
 
 }

@@ -7,7 +7,7 @@ use App\Match;
 
 class Player extends Model
 {
-    protected $fillable = ['points', 'match_id', 'nickname'];
+    protected $fillable = ['points', 'sets_won','match_id', 'nickname'];
  
     public function match()
     {

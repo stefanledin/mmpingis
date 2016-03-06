@@ -24,6 +24,7 @@ class CreateMatchesTable extends Migration
         });
         Schema::table('players', function (Blueprint $table) {
             $table->integer('points')->default(0);
+            $table->integer('sets_won')->default(0);
             $table->integer('match_id')->unsigned()->nullable();
             $table->foreign('match_id')->references('id')->on('matches');
         });
