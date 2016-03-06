@@ -23,13 +23,10 @@ class CreateMatchesTable extends Migration
             $table->timestamps();
         });
         Schema::table('players', function (Blueprint $table) {
+            $table->integer('points')->default(0);
             $table->integer('match_id')->unsigned()->nullable();
             $table->foreign('match_id')->references('id')->on('matches');
         });
-        /*Schema::table('matches', function(Blueprint $table) {
-            $table->integer('player_id')->unsigned()->nullable();
-            $table->foreign('player_id')->references('id')->on('players');
-        });*/
     }
 
     /**

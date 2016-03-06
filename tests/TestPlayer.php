@@ -15,6 +15,21 @@ class TestPlayer extends TestCase
         $player->save();
 
         $this->assertEquals('Stefan', $player->nickname);
+        $this->assertEquals(0, $player->points);
+    }
+
+    public function test_add_one_point()
+    {
+        $player = new App\Player;
+        $player->nickname = 'Fredrik';
+        $player->save();
+
+        $this->assertEquals(0, $player->points);
+
+        $player->points += 1;
+        $player->save();
+
+        $this->assertEquals(1, $player->points);
     }
 
 }

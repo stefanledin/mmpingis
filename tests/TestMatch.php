@@ -15,7 +15,7 @@ class TestMatch extends TestCase
         $player1 = new Player(['nickname' => 'Stefan']);
         $player2 = new Player(['nickname' => 'Fredrik']);
         
-        $match =  Match::create();
+        $match = Match::create();
         $match->players()->saveMany([$player1, $player2]);
 
         $score = $match->getScore();
@@ -33,13 +33,13 @@ class TestMatch extends TestCase
 
     public function test_player1_scores_point()
     {
-        $player1 = new App\Player(['nickname' => 'Stefan']);
-        $player2 = new App\Player(['nickname' => 'Fredrik']);
+        $player1 = new Player(['nickname' => 'Stefan']);
+        $player2 = new Player(['nickname' => 'Fredrik']);
         
-        $match =  App\Match::create();
+        $match = Match::create();
         $match->players()->saveMany([$player1, $player2]);      
 
-        $player1->addPoint();
+        $match->addPointFor($player1);
 
         $score = $match->getScore();
 
@@ -49,6 +49,30 @@ class TestMatch extends TestCase
         );
 
         $this->assertEquals($expected, $score);
+    }
+
+    public function test_player_wins_set()
+    {
+        $match = Match::create();
+        $match->players()->saveMany([
+            new Player([
+                'nickname' => 'Stefan',
+                'points' => 10
+            ]),
+            new Player([
+                'nickname' => 'Fredrik',
+                'points' => 9
+            ]),
+        ]);
+        $player = Player::where('nickname', 'Stefan')->first();
+        $match->addPointFor($player);
+
+        $expected = (object) array(
+            'Stefan' => 11,
+            'Fredrik' => 9
+        );
+
+        $this->assertEquals($expected, $match->getScore());
     }
 
 }

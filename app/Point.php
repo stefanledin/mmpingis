@@ -2,17 +2,20 @@
 
 namespace App;
 
+use App\Match;
+use App\Player;
+
 class Point {
 
 	protected $match;
 	protected $player;
 
-	public function inMatch($match)
+	public function inMatch(Match $match)
 	{
 		$this->match = $match;
 	}
 
-	public function by($player)
+	public function by(Player $player)
 	{
 		$this->player = $player;
 	}

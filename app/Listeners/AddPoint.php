@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\PlayerScoredPoint;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Point;
 
 class AddPoint
 {
@@ -26,7 +27,8 @@ class AddPoint
      */
     public function handle(PlayerScoredPoint $event)
     {
-        new Point($event);
+        $point = new Point()->by($event->player)->in($event->match);
+        $point->add();
 
         // 1. Hitta aktuella matchen
         $match = Match::findInSomeWay();
