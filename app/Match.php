@@ -22,6 +22,19 @@ class Match extends Model
     }
 
     /**
+     * Returns the difference between both players points
+     *
+     * @return int
+     */
+    public function getScoreDifference(Player $player)
+    {
+        $opponent = $this->getOppenentFor($player);
+        $lead = $player->points - $opponent->points;
+        return $lead;
+    }
+    
+
+    /**
      * Returns the Player that currently has most
      * points in the game.
      * @return Player player
@@ -32,20 +45,35 @@ class Match extends Model
         return $players->first(); 
     }
 
-    public function getOppenent(Player $player)
+    /**
+     * Returns the opponent to the player
+     *
+     * @return Player player
+     */
+    public function getOppenentFor(Player $player)
     {
         $opponent = $this->players()->where('id', '!=', $player->id);
         return $opponent->first();
     }
 
+    /**
+     * Add one point to the player
+     *
+     * @return void
+     */
     public function addPointFor(Player $player)
     {
         $player->points += 1;
 
         if ($player->points > 10) {
-            $player->sets_won += 1;
-            // Om motståndaren har mindre än 10 poäng så vann spelaren setet.
-            // Om motståndaren har 10 eller mer poäng
+            $opponent = $this->getOppenentFor($player);
+            if ($opponent->points >= 10) {
+                if ($this->getScoreDifference($player) > 1) {
+                    $player->sets_won += 1;
+                }        
+            } else {
+                $player->sets_won += 1;
+            }
         }
         $player->save();
     }
@@ -55,7 +83,9 @@ class Match extends Model
         return 1;
     }
     
-
+    /**
+     * Set up the relationship
+     */
     public function players()
     {
         return $this->hasMany('App\Player');
