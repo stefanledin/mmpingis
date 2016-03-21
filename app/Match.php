@@ -8,6 +8,8 @@ use App\Player;
 class Match extends Model
 {
 
+    protected $set = 1;
+
     /**
      * Returns an object with the score of each player
      * @return object score
@@ -15,7 +17,7 @@ class Match extends Model
     public function getScore()
     {
         $score = [];
-        foreach ($this->players()->get() as $player) {
+        foreach ($this->players as $player) {
             $score[$player->nickname] =  $player->points;
         }
         return (object) $score;
@@ -76,11 +78,27 @@ class Match extends Model
             }
         }
         $player->save();
+        return $player;
     }
+
+    /**
+     * Reset score and start a new set
+     *
+     * @return void
+     */
+    public function startNewSet()
+    {
+        $this->set += 1;
+        foreach ($this->players as $player) {
+            $player->points = 0;
+            $player->save();    
+        }
+    }
+    
 
     public function currentSet()
     {
-        return 1;
+        return $this->set;
     }
     
     /**
