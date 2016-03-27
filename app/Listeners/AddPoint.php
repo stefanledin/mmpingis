@@ -5,7 +5,8 @@ namespace App\Listeners;
 use App\Events\PlayerScoredPoint;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Point;
+use App\Match;
+use App\Player;
 
 class AddPoint
 {
@@ -27,24 +28,8 @@ class AddPoint
      */
     public function handle(PlayerScoredPoint $event)
     {
-        $point = new Point()->by($event->player)->in($event->match);
-        $point->add();
-
-        // 1. Hitta aktuella matchen
-        $match = Match::findInSomeWay();
-        $player = Player::find($event->player);
-        // 2. Uppdatera ställningen.
-        $player->scored($event->score)->in($match);
-        // 3. Avsluta pågående set om någon vunnit.
-        if ($player->wonSet()->in($match)) {
-            // 4. Avsluta matchen om spelaren vunnit
-            if ($player->wonMatch($match)) {
-                $match->isFinished();
-            }
-            // 5. Påbörja nytt set.
-            else {
-                $match->newSet();
-            }
-        }
+        $player = $event->player;
+        $match = Match::find($player->match->id);
+        $match->addPointFor($player);
     }
 }

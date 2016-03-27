@@ -17,7 +17,7 @@ class Match extends Model
     public function getScore()
     {
         $score = [];
-        foreach ($this->players as $player) {
+        foreach ($this->players()->get() as $player) {
             $score[$player->nickname] =  $player->points;
         }
         return (object) $score;
@@ -65,16 +65,18 @@ class Match extends Model
      */
     public function addPointFor(Player $player)
     {
-        $player->points += 1;
+        $player->addPoint();
 
         if ($player->points > 10) {
             $opponent = $this->getOppenentFor($player);
             if ($opponent->points >= 10) {
                 if ($this->getScoreDifference($player) > 1) {
                     $player->sets_won += 1;
+                    $this->startNewSet();
                 }        
             } else {
                 $player->sets_won += 1;
+                $this->startNewSet();
             }
         }
         $player->save();
@@ -89,9 +91,9 @@ class Match extends Model
     public function startNewSet()
     {
         $this->set += 1;
-        foreach ($this->players as $player) {
-            $player->points = 0;
-            $player->save();    
+        $this->save();
+        foreach ($this->players()->get() as $player) {
+            $player->resetPoints();
         }
     }
     

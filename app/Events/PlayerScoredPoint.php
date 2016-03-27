@@ -19,7 +19,7 @@ class PlayerScoredPoint extends Event implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(Player $player, bool $addPoint)
+    public function __construct(Player $player, $addPoint)
     {
         $this->player = $player;
         $this->addPoint = $addPoint;
