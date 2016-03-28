@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\PlayerScoredPoint' => [
             'App\Listeners\AddPoint',
         ],
+        'App\Events\PlayerWonSet' => [
+            'App\Listeners\WonSet'
+        ]
     ];
 
     /**

@@ -112,8 +112,8 @@ class TestMatch extends TestCase
 
         $this->assertEquals($expected, $match->getScore());
         $this->assertEquals('Stefan', $match->getLeader()->nickname);
-        $this->assertEquals(1, $player1->sets_won);
-        $this->assertEquals(0, $player2->sets_won);
+        $this->assertEquals(1, Player::find($player1->id)->sets_won);
+        $this->assertEquals(0, Player::find($player2->id)->sets_won);
     }
 
     public function test_player1_scores_point_when_tied_at_ten()
@@ -162,8 +162,8 @@ class TestMatch extends TestCase
         );
 
         $this->assertEquals($expected, $match->getScore());
-        $this->assertEquals(1, $player1->sets_won);
-        $this->assertEquals(0, $player2->sets_won);
+        $this->assertEquals(1, Player::find($player1->id)->sets_won);
+        $this->assertEquals(0, Player::find($player2->id)->sets_won);
     }
     
     public function test_reset_score_and_start_new_set()
@@ -181,14 +181,15 @@ class TestMatch extends TestCase
         $match->players()->saveMany([$player1, $player2]);
 
         $match->startNewSet();
+        $match->resetPlayerPoints();
 
         $expected = (object) array(
             'Stefan' => 0,
             'Fredrik' => 0
         );
 
-        $this->assertEquals(2, $match->currentSet());
-        $this->assertEquals($expected, $match->getScore());
+        $this->assertEquals(2, Match::find($match->id)->currentSet());
+        $this->assertEquals($expected, Match::find($match->id)->getScore());
     }
 
     public function test_player1_wins_set_and_player2_scores_first_in_second_set()
@@ -212,26 +213,21 @@ class TestMatch extends TestCase
         );
 
         $this->assertEquals($expected, $match->getScore());
-        $this->assertEquals(1, $player1->sets_won);
-        $this->assertEquals(0, $player2->sets_won);
+        $this->assertEquals(1, Player::find($player1->id)->sets_won);
+        $this->assertEquals(0, Player::find($player2->id)->sets_won);
 
         $match->startNewSet();
+        $match->resetPlayerPoints();
 
-        #$match = Match::find($match->id);
-        #$player1 = Player::find($player1->id);
-        #$player2 = Player::find($player2->id);
-
-        #$player2 = $match->addPointFor($player2);
-        
         $expected = (object) array(
             'Stefan' => 0,
             'Fredrik' => 0
         );
 
-        $this->assertEquals(2, $match->currentSet());
+        $this->assertEquals(2, Match::find($match->id)->currentSet());
         $this->assertEquals($expected, $match->getScore());
-        $this->assertEquals(1, $player1->sets_won);
-        $this->assertEquals(0, $player2->sets_won);
+        $this->assertEquals(1, Player::find($player1->id)->sets_won);
+        $this->assertEquals(0, Player::find($player2->id)->sets_won);
     }
 
 }

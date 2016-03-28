@@ -8,6 +8,8 @@ use App\Player;
 
 class TestPlayerScoredEvent extends TestCase
 {
+    use DatabaseTransactions;
+
     function test_event_is_working()
     {
         $player = new Player([

@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Player;
+use Event;
 
 class Match extends Model
 {
-
-    protected $set = 1;
+    protected $fillable = ['set'];
 
     /**
      * Returns an object with the score of each player
@@ -71,12 +71,10 @@ class Match extends Model
             $opponent = $this->getOppenentFor($player);
             if ($opponent->points >= 10) {
                 if ($this->getScoreDifference($player) > 1) {
-                    $player->sets_won += 1;
-                    $this->startNewSet();
+                    Event::fire(new Events\PlayerWonSet($player));
                 }        
             } else {
-                $player->sets_won += 1;
-                $this->startNewSet();
+                Event::fire(new Events\PlayerWonSet($player));
             }
         }
         $player->save();
@@ -90,8 +88,18 @@ class Match extends Model
      */
     public function startNewSet()
     {
+        $this->set = $this->currentSet();
         $this->set += 1;
         $this->save();
+    }
+    
+    /**
+     * Reset the score
+     *
+     * @return void
+     */
+    public function resetPlayerPoints()
+    {
         foreach ($this->players()->get() as $player) {
             $player->resetPoints();
         }
@@ -100,6 +108,9 @@ class Match extends Model
 
     public function currentSet()
     {
+        if (!$this->set) {
+            return 1;
+        }
         return $this->set;
     }
     
