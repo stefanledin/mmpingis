@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Match;
 use App\Player;
 
-class TestPlayerScoredEvent extends TestCase
+class TestStartNewSetEvent extends TestCase
 {
     use DatabaseTransactions;
 
@@ -14,21 +14,28 @@ class TestPlayerScoredEvent extends TestCase
     {
         $player = new Player([
             'nickname' => 'Stefan',
-            'points' => 10
+            'points' => 11
         ]);
         $opponent = new Player([
             'nickname' => 'Fredrik',
             'points' => 9
         ]);
-        $match = Match::create([
-            'set' => 2
-        ]);
+        $match = Match::create();
         $match->players()->saveMany([$player, $opponent]);
-        Event::fire(new App\Events\PlayerWonSet($player));
+
+        $this->assertEquals(1, $match->currentSet());
+
+        Event::fire(new App\Events\StartNewSet($match));
+
+        $expected = (object) array(
+            'Stefan' => 0,
+            'Fredrik' => 0
+        );
 
         $this->assertEquals(2, Match::find($match->id)->currentSet());
-        $this->assertEquals(1, Player::find($player->id)->sets_won);
+        $this->assertEquals($expected, Match::find($match->id)->getScore());
     }
     
 
 }
+

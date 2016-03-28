@@ -18,7 +18,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\PlayerWonSet' => [
             'App\Listeners\WonSet'
-        ]
+        ],
+        'App\Events\StartNewSet' => [
+            'App\Listeners\StartSet'
+        ],
     ];
 
     /**

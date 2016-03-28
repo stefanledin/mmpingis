@@ -2,15 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Events\PlayerWonSet;
+use App\Events\StartNewSet;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Match;
-use App\Player;
 
-class WonSet
+class StartSet
 {
-
     /**
      * Create the event listener.
      *
@@ -18,20 +15,19 @@ class WonSet
      */
     public function __construct()
     {
+        //
     }
 
     /**
      * Handle the event.
      *
-     * @param  PlayerWonSet  $event
+     * @param  StartNewSet  $event
      * @return void
      */
-    public function handle(PlayerWonSet $event)
+    public function handle(StartNewSet $event)
     {
-        $match = Match::find($event->player->match->id);
-
-        $player = Player::find($event->player->id);
-        $player->sets_won += 1;
-        $player->save();
+        $match = $event->match;
+        $match->startNewSet();
+        $match->resetPlayerPoints();
     }
 }
