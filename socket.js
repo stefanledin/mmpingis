@@ -7,8 +7,6 @@ var redis = new Redis();
 
 redis.subscribe('mmpingis');
 
-console.log('plask');
-
 redis.on('message', function (channel, message) {
 	var message = JSON.parse(message);
 	io.emit(channel +  ':' + message.event, message.data);
