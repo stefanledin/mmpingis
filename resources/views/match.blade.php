@@ -26,21 +26,21 @@
     var socket = io('http://192.168.10.10:3000');
 
     socket.on('mmpingis:App\\Events\\PlayerScoredPoint', function(data) {
-        console.log(data);
         var playerDiv = document.getElementById('player'+data.player.id);
-        playerDiv.querySelector('span.player-points').innerHTML = (data.player.points+1);
+        playerDiv.querySelector('span.player-points').innerHTML = (data.player.points + 1);
     });
     socket.on('mmpingis:App\\Events\\PlayerWonSet', function(data) {
-        console.log(data);
         var playerDiv = document.getElementById('player'+data.player.id);
         playerDiv.querySelector('span.player-sets-won').innerHTML = (data.player.sets_won + 1);
     });
     socket.on('mmpingis:App\\Events\\StartNewSet', function(data) {
-        console.log(data);
         document.getElementById('match-set').innerHTML = (data.match.set + 1);
         [].forEach.call(document.querySelectorAll('span.player-points'), function(points) {
            points.innerHTML = 0;
         });
+    });
+    socket.on('mmpingis:App\\Events\\PlayerWonMatch', function(data) {
+        console.log(data);
     });
 </script>
 @stop

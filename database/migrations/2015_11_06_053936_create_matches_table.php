@@ -21,6 +21,7 @@ class CreateMatchesTable extends Migration
         Schema::create('matches', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('set')->default(1);
+            $table->integer('won_by');
             $table->timestamps();
         });
         Schema::table('players', function (Blueprint $table) {
