@@ -2,13 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\PlayerScoredPoint;
+use App\Events\StartNewSet;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Match;
-use App\Player;
 
-class AddPoint
+class StartSet
 {
     /**
      * Create the event listener.
@@ -23,13 +21,13 @@ class AddPoint
     /**
      * Handle the event.
      *
-     * @param  PlayerScoredPoint  $event
+     * @param  StartNewSet  $event
      * @return void
      */
-    public function handle(PlayerScoredPoint $event)
+    public function handle(StartNewSet $event)
     {
-        $player = $event->player;
-        $match = Match::find($player->match->id);
-        $match->addPointFor($player);
+        $match = $event->match;
+        $match->startNewSet();
+        $match->resetPlayerPoints();
     }
 }

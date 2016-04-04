@@ -7,22 +7,32 @@ use App\Match;
 
 class Player extends Model
 {
-    protected $fillable = ['match_id', 'points_set1', 'points_set2', 'points_set3'];
- 
-    public function scored()
+    protected $fillable = ['points', 'sets_won','match_id', 'nickname'];
+
+    /**
+     * Add point
+     *
+     * @return void
+     */
+    public function addPoint()
     {
-        $match = $this->match()->first();
-        $pointsInSet = $this['points_set'.$match->set];
-        $this['points_set'.$match->set] = $pointsInSet+1;
+        $this->points += 1;
         $this->save();
     }
 
-    public function points()
+    /**
+     * Reset points to 0
+     *
+     * @return void
+     */
+    public function resetPoints()
     {
-        $match = $this->match()->first();
-        return $this['points_set'.$match->set];
+        $this->points = 0;
+        $this->save();
     }
-
+    
+    
+ 
     public function match()
     {
         return $this->belongsTo('App\Match');

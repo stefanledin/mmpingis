@@ -1,5 +1,8 @@
 <?php
 
+use App\Player;
+use App\Match;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -12,6 +15,19 @@
 */
 
 Route::get('/', function () {
-	
-    return view('welcome');
+    return view('start');
+});
+
+Route::get('ny-match', 'MatchController@create');
+Route::post('ny-match', 'MatchController@store');
+
+Route::get('match/{id}', 'MatchController@show');
+
+Route::get('player/{id}/addpoint', function($id) {
+    $player = Player::find($id);
+    Event::fire(new App\Events\PlayerScoredPoint($player, true));
+});
+Route::get('match/{id}/startnewset', function($id) {
+    $match = Match::find($id);
+    Event::fire(new App\Events\StartNewSet($match));
 });

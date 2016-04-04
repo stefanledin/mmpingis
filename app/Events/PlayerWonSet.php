@@ -7,22 +7,20 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Player;
 
-class PlayerScoredPoint extends Event implements ShouldBroadcast
+class PlayerWonSet extends Event implements ShouldBroadcast
 {
     use SerializesModels;
 
     public $player;
-    public $addPoint;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Player $player, $addPoint)
+    public function __construct(Player $player)
     {
-        $this->player = $player;
-        $this->addPoint = $addPoint;
+        $this->player = $player; 
     }
 
     /**
@@ -34,5 +32,4 @@ class PlayerScoredPoint extends Event implements ShouldBroadcast
     {
         return ['mmpingis'];
     }
-
 }
