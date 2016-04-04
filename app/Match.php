@@ -8,7 +8,7 @@ use Event;
 
 class Match extends Model
 {
-    protected $fillable = ['set'];
+    protected $fillable = ['set', 'won_by'];
 
     /**
      * Returns an object with the score of each player
@@ -28,11 +28,9 @@ class Match extends Model
      *
      * @return int
      */
-    public function getScoreDifference(Player $player)
+    public function getScoreDifference(Player $player, Player $opponent)
     {
-        $opponent = $this->getOppenentFor($player);
-        $lead = $player->points - $opponent->points;
-        return $lead;
+        return $player->points - $opponent->points;
     }
     
 
@@ -66,20 +64,48 @@ class Match extends Model
     public function addPointFor(Player $player)
     {
         $player->addPoint();
-
         if ($player->points > 10) {
-            $opponent = $this->getOppenentFor($player);
-            if ($opponent->points >= 10) {
-                if ($this->getScoreDifference($player) > 1) {
-                    Event::fire(new Events\PlayerWonSet($player));
-                }        
-            } else {
+            if ($this->playerWonSet($player)) {
                 Event::fire(new Events\PlayerWonSet($player));
+                if ($this->playerWonMatch($player)) {
+                    Event::fire(new Events\PlayerWonMatch($player));
+                }
             }
         }
-        $player->save();
-        return $player;
     }
+
+    /**
+     * Checks if the player won the set
+     *
+     * @return bool
+     */
+    protected function playerWonSet(Player $player)
+    {
+        $opponent = $this->getOppenentFor($player);
+        if ($opponent->points >= 10) {
+            if ($this->getScoreDifference($player, $opponent) > 1) {
+                return true;
+            }        
+        } else {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Checks if the player won the match
+     *
+     * @return bool
+     */
+    protected function playerWonMatch(Player $player)
+    {
+        $sets_won = Player::find($player->id)->sets_won;
+        if ($sets_won == 2) {
+            return true;
+        }
+        return false;
+    }
+    
 
     /**
      * Reset score and start a new set

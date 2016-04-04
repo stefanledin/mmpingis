@@ -21,13 +21,14 @@ Route::get('/', function () {
 Route::get('ny-match', 'MatchController@create');
 Route::post('ny-match', 'MatchController@store');
 
-Route::get('match/{id}', 'MatchController@show');
-
-Route::get('player/{id}/addpoint', function($id) {
-    $player = Player::find($id);
+Route::get('player/{index}/addpoint', function($index) {
+    $match = Match::all()->last();
+    $player = $match->players[($index-1)];
     Event::fire(new App\Events\PlayerScoredPoint($player, true));
 });
-Route::get('match/{id}/startnewset', function($id) {
-    $match = Match::find($id);
+Route::get('match/startnewset', function() {
+    $match = Match::all()->last();
     Event::fire(new App\Events\StartNewSet($match));
 });
+
+Route::get('match/{id}', 'MatchController@show');

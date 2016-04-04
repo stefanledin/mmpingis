@@ -45,7 +45,7 @@ class TestApi extends TestCase
         $this->dummyData();
         $this->assertEquals(0, Player::find($this->player1->id)->points);
         
-        $response = $this->call('GET', '/player/'.$this->player1->id.'/addpoint'); 
+        $response = $this->call('GET', '/player/1/addpoint'); 
         
         $this->assertEquals(200, $response->status());
         $this->assertEquals(1, Player::find($this->player1->id)->points);
@@ -54,7 +54,7 @@ class TestApi extends TestCase
     function test_new_set()
     {
         $this->dummyData();
-        $response = $this->call('GET', '/match/'.$this->match->id.'/startnewset');
+        $response = $this->call('GET', '/match/startnewset');
         $this->assertEquals(200, $response->status());
         $this->assertEquals(2, Match::find($this->match->id)->currentSet());
     }

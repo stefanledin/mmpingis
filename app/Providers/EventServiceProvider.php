@@ -22,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\StartNewSet' => [
             'App\Listeners\StartSet'
         ],
+        'App\Events\PlayerWonMatch' => [
+            'App\Listeners\WonMatch'
+        ],
     ];
 
     /**
