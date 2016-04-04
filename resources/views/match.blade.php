@@ -27,11 +27,11 @@
 
     socket.on('mmpingis:App\\Events\\PlayerScoredPoint', function(data) {
         var playerDiv = document.getElementById('player'+data.player.id);
-        playerDiv.querySelector('span.player-points').innerHTML = (data.player.points + 1);
+        playerDiv.querySelector('span.player-points').innerHTML = (parseFloat(data.player.points) + 1);
     });
     socket.on('mmpingis:App\\Events\\PlayerWonSet', function(data) {
         var playerDiv = document.getElementById('player'+data.player.id);
-        playerDiv.querySelector('span.player-sets-won').innerHTML = (data.player.sets_won + 1);
+        playerDiv.querySelector('span.player-sets-won').innerHTML = (parseFloat(data.player.sets_won) + 1);
     });
     socket.on('mmpingis:App\\Events\\StartNewSet', function(data) {
         document.getElementById('match-set').innerHTML = (data.match.set + 1);
