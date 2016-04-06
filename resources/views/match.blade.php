@@ -34,7 +34,7 @@
         playerDiv.querySelector('span.player-sets-won').innerHTML = (parseFloat(data.player.sets_won) + 1);
     });
     socket.on('mmpingis:App\\Events\\StartNewSet', function(data) {
-        document.getElementById('match-set').innerHTML = (data.match.set + 1);
+        document.getElementById('match-set').innerHTML = (parseFloat(data.match.set) + 1);
         [].forEach.call(document.querySelectorAll('span.player-points'), function(points) {
            points.innerHTML = 0;
         });
