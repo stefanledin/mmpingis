@@ -8,7 +8,7 @@ use Event;
 
 class Match extends Model
 {
-    protected $fillable = ['set', 'won_by'];
+    protected $fillable = ['player1', 'player2', 'set', 'won_by'];
 
     /**
      * Returns an object with the score of each player
